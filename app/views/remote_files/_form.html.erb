@@ -1,0 +1,10 @@
+  <% semantic_form_for @remote_file do |form| %>
+
+    <% form.inputs :name => "Basic" do %>
+      <%= form.input :url %>
+    <% end %>
+
+      <% form.buttons do %>
+      <%= form.commit_button %>
+    <% end %>
+  <% end %>

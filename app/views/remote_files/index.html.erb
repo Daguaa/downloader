@@ -1,0 +1,27 @@
+<h1>Listing remote_files</h1>
+
+<table>
+  <tr>
+    <th>Original name</th>
+    <th>Site</th>
+    <th>Url</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @remote_files.each do |remote_file| %>
+  <tr>
+    <td><%= remote_file.original_name %></td>
+    <td><%= remote_file.site_id %></td>
+    <td><%= remote_file.url %></td>
+    <td><%= link_to 'Show', remote_file %></td>
+    <td><%= link_to 'Edit', edit_remote_file_path(remote_file) %></td>
+    <td><%= link_to 'Destroy', remote_file, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Remote file', new_remote_file_path %>

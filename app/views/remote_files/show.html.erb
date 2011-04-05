@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Original name:</b>
+  <%= @remote_file.original_name %>
+</p>
+
+<p>
+  <b>Site:</b>
+  <%= @remote_file.site.url %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @remote_file.url %>
+</p>
+
+<% unless @remote_file.size.nil? %>
+<p>
+  <b>%:</b>
+  <%= @remote_file.completed/@remote_file.size %>
+</p>
+    <% end %>
+
+<%= link_to 'Edit', edit_remote_file_path(@remote_file) %> |
+<%= link_to 'Back', remote_files_path %>

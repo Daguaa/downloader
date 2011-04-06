@@ -1,0 +1,31 @@
+<style>
+	.ui-progressbar-value { background-image: url(images/pbar-ani.gif); }
+	</style>
+
+
+<div id="progressbar"></div>
+<script>
+	$(function() {
+		$( "#progressbar" ).progressbar({
+			value: <%= percentage*100 %>
+		});
+	});
+    updateValue();
+        function updateValue(){
+        $.ajax({
+            type: "GET",
+            url: "<%= remote_file_path(@remote_file) %>",
+            dataType: "xml",
+            success: function(xml) {
+                var dled = parseInt($(xml).find('downloaded').text());
+                var size = parseInt($(xml).find('size').text());
+                $( "#progressbar" ).progressbar("value",((dled/size)*100));
+                if((dled/size)<1)
+                    setTimeout('updateValue();', 2000);
+            }
+        });
+
+
+        }
+
+</script>

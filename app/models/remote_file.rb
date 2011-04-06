@@ -4,6 +4,7 @@ class RemoteFile < ActiveRecord::Base
   def download
     require 'net/http'
     require 'uri'
+    require 'UUID'
     url      = self.url
 
     url_base = url.split('/')[2]
@@ -11,19 +12,45 @@ class RemoteFile < ActiveRecord::Base
     self.downloaded = 0
 
     Net::HTTP.start(url_base) do |http|
-      response = http.request_head(URI.escape(url_path))
+      headReq = Net::HTTP::Head.new(URI.escape(url_path))
+      unless self.site.login.nil?
+        headReq.basic_auth self.site.login, self.site.password
+      end
+      response = http.request(headReq)
       #ProgressBar #format_arguments=[:title, :percentage, :bar, :stat_for_file_transfer]
+      self.original_name = URI.parse(url).path[%r{[^/]+\z}]
+      self.name = UUID.new.generate
       self.size = response['content-length'].to_i
       self.save!
-      File.open("test.file", 'w') { |f|
-        http.get(URI.escape(url_path)) do |str|
+      i =0
+      File.open("public/downloads/"+self.name, 'w') { |f|
+        getReq = Net::HTTP::Get.new(URI.escape(url_path))
+        unless self.site.login.nil?
+          getReq.basic_auth self.site.login, self.site.password
+        end
+        http.request(getReq) do |str|
           f.write str
           self.downloaded += str.length
-          self.save!
+          if downloaded>i*(size/25)
+            i += 1
+            self.save
+          end
         end
       }
     end
-    pbar.finish
-    puts "Done."
+    self.save
+  end
+
+  def redownload=(var)
+    unless var == "0"
+      FileUtils.rm('public/downloads/'+self.name)
+      self.downloaded = 0
+      self.save!
+      self.delay.download
+    end
+  end
+
+  def redownload
+    false
   end
 end

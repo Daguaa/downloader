@@ -1,6 +1,11 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  <b>Current File state:</b>
+  <%= @remote_file.state %>
+</p>
+
+<p>
   <b>Original name:</b>
   <%= @remote_file.original_name %>
 </p>
@@ -14,6 +19,17 @@
   <b>Url:</b>
   <%= @remote_file.url %>
 </p>
+
+<p>
+  <b>Size:</b>
+  <%= @remote_file.size.to_f/1000000 %>
+</p>
+
+<%  if @remote_file.invalid? %>
+<p>
+  <b>This file is invalid</b>
+</p>
+    <% end %>
 
 <% unless @remote_file.size.nil? %>
 <p>

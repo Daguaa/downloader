@@ -51,7 +51,9 @@ class RemoteFilesController < ApplicationController
 
     respond_to do |format|
       if @remote_file.save
-        @remote_file.delay.download
+        unless @remote_file.invalid?
+          @remote_file.start!
+        end
         format.html { redirect_to(@remote_file, :notice => 'Remote file was successfully created.') }
         format.xml  { render :xml => @remote_file, :status => :created, :location => @remote_file }
       else

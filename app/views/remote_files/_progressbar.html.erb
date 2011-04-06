@@ -1,6 +1,4 @@
-<style>
-	.ui-progressbar-value { background-image: url(images/pbar-ani.gif); }
-	</style>
+
 
 
 <div id="progressbar"></div>
@@ -10,6 +8,7 @@
 			value: <%= percentage*100 %>
 		});
 	});
+    <% if @remote_file.started? %>
     updateValue();
         function updateValue(){
         $.ajax({
@@ -27,5 +26,6 @@
 
 
         }
+  <% end %>
 
 </script>

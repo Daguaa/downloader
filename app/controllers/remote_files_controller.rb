@@ -45,11 +45,13 @@ class RemoteFilesController < ApplicationController
     myUri = URI.parse( 'http://www.mglenn.com/directory' )
     s = Site.find_or_create_by_url(myUri.host)
     @remote_file.site=s
-    @remote_file.download
+
+
 
 
     respond_to do |format|
       if @remote_file.save
+        @remote_file.delay.download
         format.html { redirect_to(@remote_file, :notice => 'Remote file was successfully created.') }
         format.xml  { render :xml => @remote_file, :status => :created, :location => @remote_file }
       else
@@ -63,7 +65,9 @@ class RemoteFilesController < ApplicationController
   # PUT /remote_files/1.xml
   def update
     @remote_file = RemoteFile.find(params[:id])
-
+    if params[:redownload]
+      @remote_file.delay.download
+    end
     respond_to do |format|
       if @remote_file.update_attributes(params[:remote_file])
         format.html { redirect_to(@remote_file, :notice => 'Remote file was successfully updated.') }

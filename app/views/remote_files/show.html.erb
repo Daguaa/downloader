@@ -18,9 +18,8 @@
 <% unless @remote_file.size.nil? %>
 <p>
   <b>%:</b>
-  <%= @remote_file.completed/@remote_file.size %>
+  <%= render :partial => 'progressbar', :locals =>{:percentage => (@remote_file.downloaded.to_f/@remote_file.size.to_f)} %>
 </p>
     <% end %>
-
 <%= link_to 'Edit', edit_remote_file_path(@remote_file) %> |
 <%= link_to 'Back', remote_files_path %>
